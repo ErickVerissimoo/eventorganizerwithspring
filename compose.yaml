@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:15.3
+    environment:
+      POSTGRES_DB: event
+      POSTGRES_PASSWORD: erick
+      POSTGRES_USER: erick
+    ports:
+      - "5430:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  app:
+    image: eventorganizer:latest
+    container_name: eventorganizer-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5430/event
+      SPRING_DATASOURCE_USERNAME: erick
+      SPRING_DATASOURCE_PASSWORD: erick
+    ports:
+      - "8003:8003"   
+volumes:
+  postgres_data:
+
+

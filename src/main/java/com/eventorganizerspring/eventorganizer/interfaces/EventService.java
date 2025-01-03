@@ -1,0 +1,11 @@
+package com.eventorganizerspring.eventorganizer.interfaces;
+
+import java.util.List;
+
+import com.eventorganizerspring.eventorganizer.models.Event;
+
+public interface EventService{
+List<Event> findAll();
+List<Event> findAllByExample(Event event);
+List<Event> findAllNextDayEvents();
+}
