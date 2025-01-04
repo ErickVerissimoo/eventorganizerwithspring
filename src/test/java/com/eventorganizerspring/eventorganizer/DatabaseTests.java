@@ -5,15 +5,11 @@ import static org.instancio.Select.field;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.chrono.Chronology;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -30,7 +26,7 @@ public class DatabaseTests {
 private List<Event> evento;
 @Inject private EventRepository repository;
  @BeforeEach
-
+@DisplayName("Setup dos testes")
  void teste(){
     evento = new ArrayList<>();
     for(int i =0; i<10; i++){
@@ -46,6 +42,7 @@ repository.saveAllAndFlush(evento);
     System.out.println("----------------------------");
 }
 @Test
+@DisplayName("Teste de obtenção dos next days")
 void second(){
     System.out.println("teste pra valer;");
     var e = repository.findAll(EventSpecifications.findNextDayEvents());
