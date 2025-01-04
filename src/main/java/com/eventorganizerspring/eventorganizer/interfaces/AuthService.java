@@ -1,8 +1,11 @@
 package com.eventorganizerspring.eventorganizer.interfaces;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import com.eventorganizerspring.eventorganizer.dtos.PersonDto;
 
 public interface AuthService {
-boolean authenticate(PersonDto dto);
-boolean cadastro(PersonDto dto);
+String authenticate(PersonDto dto);
+void cadastro(PersonDto dto);
+UsernamePasswordAuthenticationToken authenticationToken (String token);
 }

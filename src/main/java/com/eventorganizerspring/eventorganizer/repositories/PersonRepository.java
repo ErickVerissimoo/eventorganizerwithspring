@@ -10,5 +10,8 @@ import com.eventorganizerspring.eventorganizer.models.Person;
 public interface PersonRepository extends JpaRepository<Person, Integer> {
     @Query("Select u.password from Person u where u.email=:email")
     String findPasswordByEmail(@Param("email") String email);
-
+    @Query("Select u.id from Person u where u.email =:email")
+    Integer findIdByEmail(@Param("email") String email);
+    boolean existsByEmailAndId(String email, Integer id);
+    boolean existsByEmail(String email);
 }

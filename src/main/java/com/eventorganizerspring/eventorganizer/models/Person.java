@@ -1,9 +1,11 @@
 package com.eventorganizerspring.eventorganizer.models;
 
-import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.Basic;
+import org.springframework.beans.BeanUtils;
+
+import com.eventorganizerspring.eventorganizer.dtos.PersonDto;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -11,7 +13,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PostPersist;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
+@NoArgsConstructor
 @Data
 @Entity
 public class Person {
@@ -30,4 +33,9 @@ private Set<Event> events;
 public void post(){
     System.out.println("O usuário de nome:" + name + " foi persistido com sucesso");
 }
+public Person(PersonDto dto){
+    BeanUtils.copyProperties(dto, this);
+                        
+}
+
 }

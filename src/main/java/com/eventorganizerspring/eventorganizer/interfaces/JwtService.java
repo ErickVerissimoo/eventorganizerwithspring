@@ -1,16 +1,14 @@
 package com.eventorganizerspring.eventorganizer.interfaces;
 
-import java.sql.Date;
-import java.time.Instant;
+import com.eventorganizerspring.eventorganizer.models.Person;
 
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.Claims;
 
 public interface JwtService {
-String generateToken(String emissor, String userId);
-boolean validateToken(String token);
+String generateToken( Person person);
 Integer extractUserId(String token);
-default boolean isExpired(String token, String password){
-
-    return Jwts.parser().setSigningKey(password).parseClaimsJwt(token).getBody().getExpiration().after(Date.from(Instant.now()));
-}
+Boolean validateToken(String token);
+boolean isExpired(String token);
+Claims getClaims(String Token);
+String[] getParts(String token);
 }

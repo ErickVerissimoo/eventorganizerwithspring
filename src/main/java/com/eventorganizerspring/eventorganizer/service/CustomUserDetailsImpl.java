@@ -17,13 +17,13 @@ public class CustomUserDetailsImpl implements UserDetailsService{
     @Setter @Autowired @Lazy
     private PasswordEncoder encoder;
     private final PersonRepository repository;
-    public CustomUserDetailsImpl(PasswordEncoder encoder, PersonRepository repository) {
-        this.encoder=encoder;
+    public CustomUserDetailsImpl( PersonRepository repository) {
         this.repository=repository;
     }
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-       return User.builder().username(email).password(repository.findPasswordByEmail(email)) .passwordEncoder(s -> encoder.toString()).build();
+       
+        return User.builder().username(email).password(repository.findPasswordByEmail(email)) .passwordEncoder(s -> encoder.encode(s)).build();
 
     }
 
