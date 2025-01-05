@@ -4,18 +4,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
+
 import com.eventorganizerspring.eventorganizer.utils.Categoria;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import lombok.Data;
 @Data
 @Entity
 public class Event {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 @Id private Integer id;
 @CreationTimestamp
 private LocalDateTime timeCreation;

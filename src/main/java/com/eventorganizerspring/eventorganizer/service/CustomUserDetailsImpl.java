@@ -1,29 +1,31 @@
 package com.eventorganizerspring.eventorganizer.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eventorganizerspring.eventorganizer.repositories.PersonRepository;
 
-import lombok.Setter;
-@Component
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+@AllArgsConstructor
+@Log4j2
 public class CustomUserDetailsImpl implements UserDetailsService{
-    @Setter @Autowired @Lazy
-    private PasswordEncoder encoder;
+
+    private final PasswordEncoder encoder;
     private final PersonRepository repository;
-    public CustomUserDetailsImpl( PersonRepository repository) {
-        this.repository=repository;
-    }
+   
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-       
-        return User.builder().username(email).password(repository.findPasswordByEmail(email)) .passwordEncoder(s -> encoder.encode(s)).build();
+        var person = repository.findByEmail(email).orElseThrow();
+        
+        log.info("A senha do user é: " + person.getPassword());
+
+        return User.builder().username(person.getEmail()).password(person.getPassword()) .build();
 
     }
 
