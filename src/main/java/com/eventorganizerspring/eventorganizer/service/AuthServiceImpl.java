@@ -3,7 +3,11 @@ package com.eventorganizerspring.eventorganizer.service;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.ExampleMatcher.StringMatcher;
+import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,19 +29,26 @@ public class AuthServiceImpl implements AuthService {
     private final JwtServiceImpl impl;
     private final PersonRepository repository;
     private final PasswordEncoder encoder;
-
+    private final AuthenticationManager manager;
     @Override
-    public String authenticate(PersonDto dto) {
+    public ResponseCookie authenticate(PersonDto entity) {
         ExampleMatcher matcher = ExampleMatcher.matchingAny()
                 .withStringMatcher(StringMatcher.EXACT)
                 .withIncludeNullValues();
 
-        Example<Person> example = Example.of(new Person(dto), matcher);
+        Example<Person> example = Example.of(new Person(entity), matcher);
         Person person = repository.findOne(example)
                 .orElseThrow(EntityNotFoundException::new);
+   Authentication authentication = manager.authenticate(
+            new UsernamePasswordAuthenticationToken(entity.email(), entity.password())
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
+      
         String token = impl.generateToken(repository.findById(person.getId()).get());
-        return token;
+        ResponseCookie cook = ResponseCookie.from("Bearer", token).httpOnly(true).path("/").build();
+
+        return cook;
     }
 
     public final Integer findIdByEmail(Object object) {

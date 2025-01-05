@@ -4,7 +4,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eventorganizerspring.eventorganizer.repositories.PersonRepository;
@@ -15,7 +14,6 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class CustomUserDetailsImpl implements UserDetailsService{
 
-    private final PasswordEncoder encoder;
     private final PersonRepository repository;
    
     @Transactional(readOnly = true)

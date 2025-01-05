@@ -3,8 +3,8 @@ package com.eventorganizerspring.eventorganizer.filter;
 import java.io.IOException;
 import java.util.Objects;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.WebUtils;
 
 import com.eventorganizerspring.eventorganizer.interfaces.JwtService;
 
@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.var;
 
 @AllArgsConstructor
 public class AuthenticatorFilter extends OncePerRequestFilter {
@@ -21,19 +22,19 @@ public class AuthenticatorFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-               String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-        if (Objects.nonNull(authorization) && authorization.startsWith("Bearer ")) {
-            try {
-                String token = authorization.substring(7);
-                service.validateToken(token);
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Invalid or missing token");
-                return;
-            }
-        }
-
-        filterChain.doFilter(request, response);
-
-      }}
+                
+                var cook = WebUtils.getCookie(request, "Bearer");
+                if(Objects.nonNull(cook))
+                {
+                String token = cook.getValue();
+                Boolean isTokenValid = service.validateToken(token);
+                if(!isTokenValid){
+return;
+                }
+                }
+   
+              
+filterChain.doFilter(request, response);
+      }
+    
+    }

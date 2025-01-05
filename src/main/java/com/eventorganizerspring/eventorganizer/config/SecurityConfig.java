@@ -41,8 +41,8 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder, PersonRepository repository){
-        CustomUserDetailsImpl impl = new CustomUserDetailsImpl(encoder, repository);
+    public UserDetailsService userDetailsService( PersonRepository repository){
+        CustomUserDetailsImpl impl = new CustomUserDetailsImpl( repository);
         return impl;
     }
     @Bean 
