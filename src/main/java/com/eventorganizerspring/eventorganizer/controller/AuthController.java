@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eventorganizerspring.eventorganizer.dtos.PersonDto;
+import com.eventorganizerspring.eventorganizer.dtos.LoginAndSignUpDto;
 import com.eventorganizerspring.eventorganizer.interfaces.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,13 +27,13 @@ public class AuthController {
     private final AuthService service;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody PersonDto dto) {
+    public ResponseEntity<String> signup(@RequestBody LoginAndSignUpDto dto) {
         service.cadastro(dto);
         return ResponseEntity.ok().body("User cadastrado");
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<String> signin(@RequestBody PersonDto entity) {
+    public ResponseEntity<String> signin(@RequestBody LoginAndSignUpDto entity) {
      
         ResponseCookie cook =   service.authenticate(entity);
         return ResponseEntity.ok()

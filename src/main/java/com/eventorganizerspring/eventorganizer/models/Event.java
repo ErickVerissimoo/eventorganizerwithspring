@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 @Data
 @Entity
@@ -29,4 +30,6 @@ private String description;
 private List<Person> persons;
 @Enumerated(EnumType.ORDINAL)
 private Categoria categoria;
+@ManyToOne
+private Address address;
 }

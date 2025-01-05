@@ -11,8 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.eventorganizerspring.eventorganizer.dtos.PersonDto;
+import com.eventorganizerspring.eventorganizer.dtos.LoginAndSignUpDto;
 import com.eventorganizerspring.eventorganizer.interfaces.AuthService;
+import com.eventorganizerspring.eventorganizer.interfaces.JwtService;
 import com.eventorganizerspring.eventorganizer.models.Person;
 import com.eventorganizerspring.eventorganizer.repositories.PersonRepository;
 
@@ -26,12 +27,12 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class AuthServiceImpl implements AuthService {
 
-    private final JwtServiceImpl impl;
+    private final JwtService impl;
     private final PersonRepository repository;
     private final PasswordEncoder encoder;
     private final AuthenticationManager manager;
     @Override
-    public ResponseCookie authenticate(PersonDto entity) {
+    public ResponseCookie authenticate(LoginAndSignUpDto entity) {
         ExampleMatcher matcher = ExampleMatcher.matchingAny()
                 .withStringMatcher(StringMatcher.EXACT)
                 .withIncludeNullValues();
@@ -40,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
         Person person = repository.findOne(example)
                 .orElseThrow(EntityNotFoundException::new);
    Authentication authentication = manager.authenticate(
-            new UsernamePasswordAuthenticationToken(entity.email(), entity.password())
+            new UsernamePasswordAuthenticationToken(entity.getEmail(), entity.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -55,16 +56,16 @@ public class AuthServiceImpl implements AuthService {
         if (object instanceof Person) {
             Person p = (Person) object;
             return repository.findIdByEmail(p.getEmail());
-        } else if (object instanceof PersonDto) {
-            PersonDto dto = (PersonDto) object;
-            return repository.findIdByEmail(dto.email());
+        } else if (object instanceof LoginAndSignUpDto) {
+            LoginAndSignUpDto dto = (LoginAndSignUpDto) object;
+            return repository.findIdByEmail(dto.getEmail());
         }
         throw new EntityNotFoundException();
     }
 
     @Override
-    public void cadastro(PersonDto dto) {
-        if (repository.existsByEmail(dto.email())) {
+    public final void cadastro(LoginAndSignUpDto dto) {
+        if (repository.existsByEmail(dto.getEmail())) {
             throw new EntityExistsException();
         }
         var e = new Person(dto);
@@ -75,10 +76,5 @@ public class AuthServiceImpl implements AuthService {
         repository.saveAndFlush(e);
     }
 
-    @Override
-    public UsernamePasswordAuthenticationToken authenticationToken(String token) {
-        UsernamePasswordAuthenticationToken tokenAuthentication = new UsernamePasswordAuthenticationToken(
-                impl.getClaims(token).get("email"), impl.getClaims(token).getSubject());
-        return tokenAuthentication;
-    }
+
 }

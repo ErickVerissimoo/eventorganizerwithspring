@@ -8,4 +8,7 @@ public interface EventService{
 List<Event> findAll();
 List<Event> findAllByExample(Event event);
 List<Event> findAllNextDayEvents();
+void createEvent(Event event);
+Event findEvent(Integer id);
+Event findEvent(Event event);
 }

@@ -44,8 +44,7 @@ return p;
 
     @Override
     public Person getPerson(Integer id) {
-    return repository.findById(id).orElseThrow(EntityNotFoundException::new);    
-    
+    return repository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

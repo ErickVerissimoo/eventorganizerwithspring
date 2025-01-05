@@ -1,10 +1,10 @@
 package com.eventorganizerspring.eventorganizer.models;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 
-import com.eventorganizerspring.eventorganizer.dtos.PersonDto;
+import com.eventorganizerspring.eventorganizer.dtos.LoginAndSignUpDto;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,11 +28,10 @@ private String email;
 @ManyToMany
 @JoinTable(
 name = "event_person",
-joinColumns = { @JoinColumn(name = "person_key")},inverseJoinColumns = @JoinColumn(name = "event_id")
-)
-private Set<Event> events;
+joinColumns = { @JoinColumn(name = "person_key")},inverseJoinColumns = @JoinColumn(name = "event_id"))
+private List<Event> events;
 
-public Person(PersonDto dto){
+public Person(LoginAndSignUpDto dto){
     BeanUtils.copyProperties(dto, this);
                         
 }
