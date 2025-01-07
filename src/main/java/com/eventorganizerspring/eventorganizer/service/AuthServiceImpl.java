@@ -64,7 +64,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public final void cadastro(LoginAndSignUpDto dto) {
+    public void cadastro(LoginAndSignUpDto dto) {
+
         if (repository.existsByEmail(dto.getEmail())) {
             throw new EntityExistsException();
         }

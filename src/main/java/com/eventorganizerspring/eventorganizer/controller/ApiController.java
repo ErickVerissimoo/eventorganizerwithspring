@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eventorganizerspring.eventorganizer.dtos.CreateEventDto;
 import com.eventorganizerspring.eventorganizer.interfaces.EventService;
 import com.eventorganizerspring.eventorganizer.interfaces.PersonService;
+import com.eventorganizerspring.eventorganizer.models.Event;
 import com.eventorganizerspring.eventorganizer.utils.MapperEvent;
 
 import lombok.RequiredArgsConstructor;
@@ -25,12 +26,12 @@ private final EventService service;
 private final MapperEvent mapper;
 private final PersonService service2;
 @GetMapping("/{id}")
-public String getEvent(@PathVariable String id) {
-    return new String();
+public Event getEvent(@PathVariable String id) {
+    return service.findEvent(Integer.parseInt(id));
 }
 @PostMapping
 public ResponseEntity<String> postEvent(@RequestBody  CreateEventDto dto, @CookieValue("Bearer") String token) {
-    service.createEvent(mapper.toEntity(dto));
+    service.createEvent(mapper.toEntity(dto), token);
 
     return ResponseEntity.ok("tudo certo");
 }

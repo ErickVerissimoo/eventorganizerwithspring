@@ -29,6 +29,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody LoginAndSignUpDto dto) {
         service.cadastro(dto);
+        
         return ResponseEntity.ok().body("User cadastrado");
     }
 

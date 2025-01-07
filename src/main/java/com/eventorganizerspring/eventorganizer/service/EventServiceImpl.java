@@ -10,8 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.eventorganizerspring.eventorganizer.interfaces.EventService;
+import com.eventorganizerspring.eventorganizer.interfaces.JwtService;
 import com.eventorganizerspring.eventorganizer.models.Event;
 import com.eventorganizerspring.eventorganizer.repositories.EventRepository;
+import com.eventorganizerspring.eventorganizer.repositories.PersonRepository;
 import com.eventorganizerspring.eventorganizer.utils.EventSpecifications;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -21,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 public class EventServiceImpl implements EventService {
     private final EventRepository repository;
     private final ModelMapper mapper;
+    private final JwtService service;
+    private final PersonRepository repository2;
     @Override
     public List<Event> findAll() {
 return repository.findAll();
@@ -41,9 +45,15 @@ return repository.findAll();
     }
 
     @Override
-    public void createEvent(Event event) {
+    public void createEvent(Event event, String token) {
+int e = service.extractUserId(token);
+Event evento = new Event();
+var user = repository2.findById( e).orElseThrow(EntityNotFoundException::new);
+
+evento.getPersons().addLast(user);;
+user.getEvents().addFirst(evento);
 repository.saveAndFlush(event);
-        
+        repository2.saveAndFlush(user);
     }
 
     @Override
